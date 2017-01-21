@@ -1,4 +1,4 @@
-# custom_stuff
+# Custom Stuff
 Currently has a weapon system to only allow one primary, secondary, melee/grenade, and others. Also adds a simple colored chat message function. Also adds a quick way to drop a weapon, with N as default.
 
 
