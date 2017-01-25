@@ -25,7 +25,7 @@ hook.Add( "Initialize", "RestartCreateTimers", function()
 	end
 	timer.Create( "RestartCheckTimer", 60, 0, function()
 		local time = date( "%H:%M" )
-		print(time)
+		--print(time)
 		if restart_times[time] then RunConsoleCommand( "_restart" ) end
 		if notify_time[time] then BroadcastChatPrintColored( unpack( notify_time[time] ) ) end
 	end)
