@@ -14,7 +14,11 @@ local function doWeaponPickUp( weaponThing )
         if not weapon.WeaponSlot then continue end
         if weapon.WeaponSlot == weaponThing.WeaponSlot then
           ply:ChatPrintColored( Color(255,0,0), Messages[weapon.WeaponSlot] )
-          ply:dropDRPWeapon( weapon )
+          if DarkRP then
+            ply:dropDRPWeapon( weapon )
+          else
+            SafeRemoveEntity(weapon)
+          end
         end
       end
     end

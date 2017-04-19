@@ -19,15 +19,33 @@ local notify_time = {
 	["11:59"] = { Color(255,0,0), "Server will restart in ", Color(255,0,255), "1 minutes!"},
 }
 local date = os.date
-hook.Add( "Initialize", "RestartCreateTimers", function()
-	if timer.Exists( "RestartCheckTimer" ) then
+local CanRestartConvar = CreateConVar( "custom_stuff_auto_restart", "1", {FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE}, "Enables the automatic restart timer  when set to 1, else it will not do the automatic  restart." )
+local function CreateTimers()
+    if CanRestartConvar:GetInt() == 0 then return end
+    if timer.Exists( "RestartCheckTimer" ) then
 		timer.Remove( "RestartCheckTimer" )
 	end
 	timer.Create( "RestartCheckTimer", 60, 0, function()
 		local time = date( "%H:%M" )
-		--print(time)
 		if restart_times[time] then RunConsoleCommand( "_restart" ) end
 		if notify_time[time] then BroadcastChatPrintColored( unpack( notify_time[time] ) ) end
 	end)
 end
-) 
+
+hook.Add( "Initialize", "RestartCreateTimers", StartTimers)
+
+cvars.AddChangeCallback( "custom_stuff_auto_restart", function(convar, old_value, new_value)
+    if convar == "custom_stuff_auto_restart" then
+        if CanRestartConvar:GetInt() == 1 then
+            if timer.Exists( "RestartCheckTimer" ) then
+                timer.Start( "RestartCheckTimer" )
+            else
+                CreateTimers()
+            end
+        elseif CanRestartConvar:GetInt() == 0 then
+            if timer.Exists( "RestartCheckTimer" ) then
+                timer.Pause( "RestartCheckTimer" )
+            end
+        end
+    end
+end)
