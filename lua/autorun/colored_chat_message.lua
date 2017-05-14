@@ -1,25 +1,11 @@
 local MessageName = "CustomColoredChatMessage"
 if SERVER then
   util.AddNetworkString( MessageName )
-  local PLYMETA = FindMetaTable( "Player" )
-  function PLYMETA:ChatPrintColored( ... )
-    net.Start( MessageName )
-      net.WriteBool(false)
-      net.WriteTable( { ... } )
-    net.Send(self)
-  end
-  function PLYMETA:ConsolePrintColored( ... )
-    net.Start( MessageName )
-      net.WriteBool(true)
-      net.WriteTable( { ... } )
-    net.Send(self)
-  end
-  function BroadcastChatPrintColored(...)
+  function BroadcastChatPrintColored( ... )
     net.Start( MessageName )
       net.WriteBool(false)
       net.WriteTable( { ... } )
     net.Broadcast()
-
   end
   function BroadcastConsolePrintColored( ... )
     net.Start( MessageName )
@@ -27,7 +13,13 @@ if SERVER then
       net.WriteTable( { ... } )
     net.Broadcast()
   end
-
+  local PLYMETA = FindMetaTable( "Player" )
+  function PLYMETA:ChatPrintColored( ... )
+    BroadcastChatPrintColored( ... )
+  end
+  function PLYMETA:ConsolePrintColored( ... )
+    BroadcastConsolePrintColored( ... )
+  end
 end
 
 if CLIENT then
